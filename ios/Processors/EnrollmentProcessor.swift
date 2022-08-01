@@ -27,7 +27,7 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
     init(fromVC: UIViewController, delegate: ProcessingDelegate) {
         self.processingDelegate = delegate
         self.presentSessionVCFrom = fromVC
-      
+
         super.init()
         // instantiating a session delegate ObjectiveC class
         // wrapping the enrollment processor
@@ -139,7 +139,8 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
             "faceScan": lastResult.faceScanBase64!,
             "auditTrailImage": lastResult.auditTrailCompressedBase64!.first!,
             "lowQualityAuditTrailImage": lastResult.lowQualityAuditTrailCompressedBase64!.first!,
-            "sessionId": lastResult.sessionId
+            "sessionId": lastResult.sessionId,
+            "agent": lastResult.sessionId
         ]
 
         FaceVerification.shared.enroll(
@@ -151,9 +152,9 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
             let enrollmentResult = response?["enrollmentResult"] as? [String: String]
             let resultBlob = enrollmentResult?["resultBlob"]
             var enrollmentError = error
-          
+
             self.resultCallback.onFaceScanUploadProgress(uploadedPercent: 1)
-          
+
             if error == nil && resultBlob == nil {
               enrollmentError = FaceVerificationError.unexpectedResponse
             }

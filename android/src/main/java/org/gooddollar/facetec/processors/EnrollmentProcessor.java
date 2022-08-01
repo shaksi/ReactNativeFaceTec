@@ -164,6 +164,8 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
       payload.put("auditTrailImage", lastResult.getAuditTrailCompressedBase64()[0]);
       payload.put("lowQualityAuditTrailImage", lastResult.getLowQualityAuditTrailCompressedBase64()[0]);
       payload.put("sessionId", lastResult.getSessionId());
+      payload.put("agent", FaceTecSDK.createFaceTecAPIUserAgentString(lastResult.getSessionId()));
+
     } catch(Exception e) {
       lastMessage = "Exception raised while attempting to create JSON payload for upload.";
       resultCallback.cancel();
