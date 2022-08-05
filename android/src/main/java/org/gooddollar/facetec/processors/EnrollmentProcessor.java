@@ -176,7 +176,7 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
       @Override
       public void onSuccess(JSONObject response) {
         String successMessage = Customization.resultSuccessMessage;
-        JSONObject enrollmentResult = getEnrollmentResult(response);
+        JSONObject enrollmentResult = response;
         String resultBlob = enrollmentResult.optString("resultBlob");
 
         resultCallback.uploadProgress(1);
@@ -191,7 +191,7 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
         }
 
         EnrollmentProcessor.this.isSuccess = true;
-        EnrollmentProcessor.this.lastMessage = successMessage;
+        EnrollmentProcessor.this.lastMessage = enrollmentResult.toString();
         FaceTecCustomization.overrideResultScreenSuccessMessage = successMessage;
 
         resultCallback.succeed();
@@ -213,7 +213,7 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
     lastMessage = exception.getMessage();
 
     if (response != null) {
-      JSONObject enrollmentResult = getEnrollmentResult(response);
+      JSONObject enrollmentResult = response;
 
       // if isDuplicate is strictly true, that means we have dup face
       boolean isDuplicateIssue = enrollmentResult.optBoolean("isDuplicate", false);
@@ -225,6 +225,11 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
       // getting result Blob to use in the retry case
       String resultBlob = enrollmentResult.optString("resultBlob");
 
+      boolean isErrorIssue = enrollmentResult.optBoolean("error", false);
+
+      if (isErrorIssue && resultBlob=="") {
+        lastResultCallback.cancel();
+      }
       // if there's no duplicate / 3d match issues but we have
       // liveness issue strictly - we'll check for possible session retry
       if (isLivenessIssue && (resultBlob != null) && !isDuplicateIssue && !is3DMatchIssue) {
@@ -236,7 +241,7 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
           // showing reason
           lastResultCallback.uploadMessageOverride(lastMessage);
           // notifying about retry
-          lastResultCallback.proceedToNextStep(resultBlob);
+          // lastResultCallback.proceedToNextStep(resultBlob);
 
           // dispatching retry event
           WritableMap eventData = Arguments.createMap();

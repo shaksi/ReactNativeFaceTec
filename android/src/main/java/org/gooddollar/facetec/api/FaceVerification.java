@@ -171,7 +171,7 @@ public final class FaceVerification {
           }
 
           if (responseJSON.has(errorMessageProperty) == true) {
-            errorMessage = responseJSON.getString(errorMessageProperty);
+            errorMessage = responseJSON.getString("errorMessage");
           }
 
           if (errorMessage == null) {
