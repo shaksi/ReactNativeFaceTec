@@ -191,7 +191,7 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
         }
 
         EnrollmentProcessor.this.isSuccess = true;
-        EnrollmentProcessor.this.lastMessage = enrollmentResult.toString();
+        EnrollmentProcessor.this.lastMessage = response.toString();
         FaceTecCustomization.overrideResultScreenSuccessMessage = successMessage;
 
         resultCallback.succeed();
