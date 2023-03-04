@@ -2,6 +2,10 @@ import { NativeEventEmitter } from 'react-native'
 
 import { FaceTecUxEvent } from './FaceTecPublicApi'
 
+import {Platform} from 'react-native';
+
+const isIOS = Platform.OS === 'ios';
+
 // sdk class
 export class FaceTecSDK {
   _subscriptions = {}
@@ -43,8 +47,11 @@ export class FaceTecSDK {
   async enroll(enrollmentIdentifier, chainId = null, maxRetries = -1, timeout = -1) {
     const { module } = this
     const chain = String(chainId || '')
-
-    return module.faceVerification(enrollmentIdentifier, chain, maxRetries, timeout)
+    if (isIOS) {
+      return module.faceVerification(enrollmentIdentifier, chain, maxRetries, timeout)
+    } else {
+      return module.faceVerification(enrollmentIdentifier, chain, maxRetries, timeout)
+    }
   }
 
   addListener(event, handler) {
