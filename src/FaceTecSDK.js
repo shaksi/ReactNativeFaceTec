@@ -48,7 +48,7 @@ export class FaceTecSDK {
     const { module } = this
     const chain = String(chainId || '')
     if (isIOS) {
-      return module.faceVerification(enrollmentIdentifier, chain, maxRetries, timeout)
+      return module.faceVerification(enrollmentIdentifier, maxRetries, timeout)
     } else {
       return module.faceVerification(enrollmentIdentifier, chain, maxRetries, timeout)
     }
