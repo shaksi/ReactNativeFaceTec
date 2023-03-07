@@ -19,7 +19,7 @@ final class Customization {
     private static let darkGray = UIColor.darkGray
     private static let lightGray = UIColor.lightGray
 
-    private static let primary = UIColor("#00afff")
+    private static let primary = UIColor("#4434cc")
     private static let gray50Percent = UIColor("#cbcbcb")
 
     private static let defaultCornerRadius: Int32 = 5
@@ -31,24 +31,24 @@ final class Customization {
 
         return Bundle(url: bundleUrl)!
     }()
-  
+
     static let UICustomization = createBasicCustomization()
 
     static let LowLightModeCustomization: FaceTecCustomization = {
         let ui = createBasicCustomization()
         let guidance = ui.guidanceCustomization
-        
+
         guidance.readyScreenHeaderTextColor = white
         guidance.readyScreenSubtextTextColor = white
 
         return ui
     }()
-    
+
     static let DynamicModeCustomization: FaceTecCustomization = {
       let ui = createBasicCustomization()
       let guidance = ui.guidanceCustomization
       let cancelButton = ui.cancelButtonCustomization
-      
+
       cancelButton.customImage = UIImage(named: "CancelWhite.png", in: defaultBundle, compatibleWith: nil)!
       guidance.readyScreenHeaderTextColor = black
       guidance.readyScreenSubtextTextColor = black
@@ -72,7 +72,7 @@ final class Customization {
             result["FaceTec_\(keyValue.key.snakeCased())"] = keyValue.value
         }
     }()
-  
+
     private static func createBasicCustomization() -> FaceTecCustomization {
       let ui = FaceTecCustomization()
 
@@ -86,7 +86,7 @@ final class Customization {
 
       // removing branding image from overlay
       overlay.showBrandingImage = false
-      overlay.backgroundColor = white.withAlphaComponent(0.5)
+      overlay.backgroundColor = white.withAlphaComponent(1)
 
       // setting custom location & image of cancel button
       cancelButton.location = .topRight
@@ -109,14 +109,15 @@ final class Customization {
       frame.borderColor = white.withAlphaComponent(0)
       frame.cornerRadius = defaultCornerRadius
       frame.borderWidth = 0
-      frame.shadow = FaceTecShadow.css(boxShadow: [0, 19, 38, 0], black, 0.42)
+      frame.shadow = FaceTecShadow.css(boxShadow: [0, 19, 38, 0], black, 0.0)
+
 
       // setting Zoom UI background color
       frame.backgroundColor = white
 
       // guidance screens ("frame your face", "retry" etc) customizations
       // setting setting Zoom UI default text color
-      guidance.foregroundColor = darkGray
+      guidance.foregroundColor = primary
 
       // customizing buttons
       guidance.buttonFont = defaultFont
