@@ -27,7 +27,7 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
     init(fromVC: UIViewController, delegate: ProcessingDelegate) {
         self.processingDelegate = delegate
         self.presentSessionVCFrom = fromVC
-      
+
         super.init()
         // instantiating a session delegate ObjectiveC class
         // wrapping the enrollment processor
@@ -130,7 +130,16 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
             processingDelegate.onCameraAccessError()
         }
     }
-
+    struct ResponseObject {
+        var scanResultBlob: String?
+        var isDuplicate: Int?
+        var error: Int?
+        var isVerified: Int?
+        var isNotMatch: Int?
+        var success: Int?
+        var isLive: Int?
+        var resultBlob: String?
+    }
     private func sendEnrollmentRequest() -> Void {
         // setting initial progress to 0 for freeze progress bar
         resultCallback.onFaceScanUploadProgress(uploadedPercent: 0)
@@ -148,13 +157,53 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
             withTimeout: timeout,
             withDelegate: self
         ) { response, error in
-            let enrollmentResult = response?["enrollmentResult"] as? [String: String]
-            let resultBlob = enrollmentResult?["resultBlob"]
+         //   let enrollmentResult = response?["enrollmentResult"] as? [String: String]
+
+            print("TOP LEVEL")
+            print(response)
+            var res = ResponseObject();
+
+            if let scanResultBlob = response?["scanResultBlob"] as? String {
+                res.scanResultBlob = scanResultBlob
+            }
+
+            if let isDuplicate = response?["isDuplicate"] as? Int {
+                res.isDuplicate = isDuplicate
+            }
+
+            if let error = response?["error"] as? Int {
+                res.error = error
+            }
+
+            if let isVerified = response?["isVerified"] as? Int {
+                res.isVerified = isVerified
+            }
+
+            if let isNotMatch = response?["isNotMatch"] as? Int {
+                res.isNotMatch = isNotMatch
+            }
+
+            if let success = response?["success"] as? Int {
+                res.success = success
+            }
+
+            if let isLive = response?["isLive"] as? Int {
+                res.isLive = isLive
+            }
+
+            if let resultBlob = response?["resultBlob"] as? String {
+                res.resultBlob = resultBlob
+            }
+
+            let resultBlob = response?["resultBlob"] as? [String: String]
             var enrollmentError = error
-          
+
             self.resultCallback.onFaceScanUploadProgress(uploadedPercent: 1)
-          
-            if error == nil && resultBlob == nil {
+            print("RESPONSE OF ENROLLMENT")
+            print(res)
+            print(response)
+
+            if res.error == 0 && res.resultBlob == "" {
               enrollmentError = FaceVerificationError.unexpectedResponse
             }
 
@@ -167,7 +216,7 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
             self.lastMessage = Customization.resultSuccessMessage
 
             FaceTecCustomization.setOverrideResultScreenSuccessMessage(self.lastMessage)
-            self.resultCallback.onFaceScanGoToNextStep(scanResultBlob: resultBlob!)
+            self.resultCallback.onFaceScanGoToNextStep(scanResultBlob: res.resultBlob!)
         }
     }
 
