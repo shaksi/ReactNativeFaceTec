@@ -144,11 +144,13 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
         // setting initial progress to 0 for freeze progress bar
         resultCallback.onFaceScanUploadProgress(uploadedPercent: 0)
 
+        let userAgent = FaceTec.sdk.createFaceTecAPIUserAgentString(lastResult.sessionId);
         let payload: [String : Any] = [
             "faceScan": lastResult.faceScanBase64!,
             "auditTrailImage": lastResult.auditTrailCompressedBase64!.first!,
             "lowQualityAuditTrailImage": lastResult.lowQualityAuditTrailCompressedBase64!.first!,
-            "sessionId": lastResult.sessionId
+            "sessionId": lastResult.sessionId,
+            "agent": userAgent
         ]
 
         FaceVerification.shared.enroll(
@@ -159,8 +161,8 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
         ) { response, error in
          //   let enrollmentResult = response?["enrollmentResult"] as? [String: String]
 
-            print("TOP LEVEL")
-            print(response)
+            // print("TOP LEVEL")
+            // print(response)
             var res = ResponseObject();
 
             if let scanResultBlob = response?["scanResultBlob"] as? String {
@@ -199,9 +201,9 @@ class EnrollmentProcessor: NSObject, URLSessionTaskDelegate, SessionDelegate {
             var enrollmentError = error
 
             self.resultCallback.onFaceScanUploadProgress(uploadedPercent: 1)
-            print("RESPONSE OF ENROLLMENT")
-            print(res)
-            print(response)
+            // print("RESPONSE OF ENROLLMENT")
+            // print(res)
+            // print(response)
 
             if res.error == 0 && res.resultBlob == "" {
               enrollmentError = FaceVerificationError.unexpectedResponse
