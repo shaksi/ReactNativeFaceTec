@@ -40,7 +40,7 @@ public class Customization {
   final private static int darkGray = Color.DKGRAY;
   final private static int lightGray = Color.LTGRAY;
 
-  final private static int primary = 0xff00afff;
+  final private static int primary = 0xff3a4276;
   final private static int gray50Percent = 0xffcbcbcb;
 
   final private static int defaultCornerRadius = 5;
