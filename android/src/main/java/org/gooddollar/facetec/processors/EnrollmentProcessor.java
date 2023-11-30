@@ -57,7 +57,7 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
   public void enroll(final String enrollmentIdentifier, final String v1Identifier) {
     enroll(enrollmentIdentifier, v1Identifier, null, null, null);
   }
-  
+
   public void enroll(final String enrollmentIdentifier, final String v1Identifier, final String chainId) {
     enroll(enrollmentIdentifier, v1Identifier, chainId, null, null);
   }
@@ -173,6 +173,7 @@ public class EnrollmentProcessor implements FaceTecFaceScanProcessor {
       payload.put("lowQualityAuditTrailImage", lastResult.getLowQualityAuditTrailCompressedBase64()[0]);
       payload.put("sessionId", lastResult.getSessionId());
       payload.put("fvSigner", this.v1Identifier);
+      payload.put("agent", FaceTecSDK.createFaceTecAPIUserAgentString(lastResult.getSessionId()));
 
       // if no chainId then DO NOT send chainId in body
       if (this.chainId != null) {
